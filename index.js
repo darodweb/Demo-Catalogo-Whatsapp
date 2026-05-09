@@ -26,6 +26,12 @@ let cart = [];
 let activeCategory = "Todos";
 
 function init() {
+  // Cargar carrito persistido desde localStorage
+  try {
+    const saved = localStorage.getItem("tienda_cart");
+    if (saved) cart = JSON.parse(saved);
+  } catch {}
+
   document.getElementById("storeName").textContent    = CONFIG.nombre;
   document.getElementById("storeTagline").textContent = CONFIG.tagline;
   document.getElementById("heroTitle").textContent    = CONFIG.heroTitle;
@@ -34,6 +40,16 @@ function init() {
 
   document.getElementById("deliveryMethod").addEventListener("change", function () {
     document.getElementById("addressGroup").style.display = this.value === "envio" ? "block" : "none";
+  });
+
+  // Sincronizar carrito al volver desde la página de producto
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) {
+      try {
+        const saved = localStorage.getItem("tienda_cart");
+        if (saved) { cart = JSON.parse(saved); updateCartCount(); renderProducts(); }
+      } catch {}
+    }
   });
 
   loadProducts();
@@ -137,6 +153,8 @@ function showDemoProducts() {
 }
 
 function render() {
+  // Guardar en sessionStorage para que producto.html pueda leerlos sin refetch
+  sessionStorage.setItem("tienda_products", JSON.stringify(products));
   document.getElementById("loadingState").style.display = "none";
   document.getElementById("storeContent").style.display = "block";
   renderCategories();
@@ -197,13 +215,13 @@ function renderProducts() {
       : `<span class="product-price">${CONFIG.moneda} ${p.precio.toLocaleString("es-AR")}</span>`;
 
     return `
-      <div class="product-card ${!p.disponible ? 'out-of-stock' : ''}" style="${delay}">
+      <div class="product-card ${!p.disponible ? 'out-of-stock' : ''}" style="${delay}" onclick="goToProduct(${p.id})">
         ${imgBlock}
         <div class="product-info">
           ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ""}
           <div class="product-name">${p.nombre}</div>
           <div class="product-desc">${p.descripcion}</div>
-          <div class="product-footer">
+          <div class="product-footer" onclick="event.stopPropagation()">
             <div>
               ${priceDisplay}
               ${stockLabel}
@@ -244,12 +262,17 @@ function changeQty(id, delta) {
 }
 
 function updateCartCount() {
+  localStorage.setItem("tienda_cart", JSON.stringify(cart));
   const total = cart.reduce((s, i) => s + i.qty, 0);
   const el = document.getElementById("cartCount");
   el.textContent = total;
   el.classList.remove("bump");
   void el.offsetWidth; // reflow to retrigger animation
   el.classList.add("bump");
+}
+
+function goToProduct(id) {
+  window.location.href = `producto.html?id=${id}`;
 }
 
 function openCart()  { renderCartModal(); document.getElementById("cartModal").classList.add("open"); }
@@ -324,7 +347,10 @@ function sendToWhatsApp() {
   msg += `👤 *Cliente:* ${name}\n`;
   if (phone) msg += `📞 *Teléfono:* ${phone}\n`;
   msg += `\n📋 *Productos:*\n`;
-  cart.forEach(i => { msg += `• ${i.nombre} × ${i.qty} — ${CONFIG.moneda} ${(i.precio * i.qty).toLocaleString("es-AR")}\n`; });
+  cart.forEach(i => {
+    msg += `• ${i.nombre} × ${i.qty} — ${CONFIG.moneda} ${(i.precio * i.qty).toLocaleString("es-AR")}\n`;
+    if (i.aclaraciones) msg += `  📝 ${i.aclaraciones}\n`;
+  });
   msg += `\n💰 *Total: ${CONFIG.moneda} ${total.toLocaleString("es-AR")}*\n`;
   msg += `\n🚚 *Entrega:* ${dLabels[delivery]}`;
   if (delivery === "envio" && address) msg += `\n📍 *Dirección:* ${address}`;

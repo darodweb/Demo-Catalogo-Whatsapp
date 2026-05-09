@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Producto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="producto.css">
+</head>
+<body class="product-page">
+
+<!-- ===== NAV ===== -->
+<nav class="product-nav">
+  <button class="back-btn" onclick="goBack()">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M19 12H5M12 5l-7 7 7 7"/>
+    </svg>
+  </button>
+  <span class="product-nav-title" id="navTitle">Cargando…</span>
+  <div style="width:40px"></div>
+</nav>
+
+<!-- ===== HERO IMAGE ===== -->
+<div class="product-hero" id="productHero"></div>
+
+<!-- ===== CONTENT ===== -->
+<div class="product-content">
+
+  <div id="productBadgeWrap"></div>
+  <h1 class="product-detail-name" id="productName">—</h1>
+  <p class="product-detail-desc" id="productDesc"></p>
+
+  <div class="detail-divider"></div>
+
+  <!-- PRECIO -->
+  <div class="price-section" id="priceSection"></div>
+
+  <!-- ADICIONALES (oculto hasta que EXTRAS tenga items) -->
+  <div class="extras-section" id="extrasSection" style="display:none">
+    <div class="detail-divider"></div>
+    <div class="extras-header">
+      <span class="extras-title">Adicionales</span>
+      <span class="extras-badge">Opcional</span>
+    </div>
+    <div class="extras-list" id="extrasList"></div>
+  </div>
+
+  <div class="detail-divider"></div>
+
+  <!-- ACLARACIONES -->
+  <div class="aclaraciones-section">
+    <div class="aclaraciones-header">
+      <label class="aclaraciones-label" for="aclaraciones">Aclaraciones</label>
+      <span class="char-count" id="charCount">0 / 200</span>
+    </div>
+    <textarea
+      id="aclaraciones"
+      class="aclaraciones-input"
+      placeholder="¿Querés aclarar algo sobre tu pedido? (máx. 200 caracteres)"
+      maxlength="200"
+    ></textarea>
+  </div>
+
+</div>
+
+<!-- ===== BARRA STICKY ===== -->
+<div class="product-bottom-bar" id="bottomBar"></div>
+
+<!-- Espacio para que la barra no tape el contenido -->
+<div style="height:90px"></div>
+
+<script src="producto.js"></script>
+</body>
+</html>
