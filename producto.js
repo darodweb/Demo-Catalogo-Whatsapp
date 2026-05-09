@@ -300,6 +300,15 @@ function agregarAlCarrito() {
 }
 
 function showConfirmation() {
+  const selectedExtras = getExtras().filter(e => (extrasQty[e.id] || 0) > 0);
+  const extrasHtml = selectedExtras.length
+    ? `<ul style="list-style:none;margin:0 0 1.2rem;padding:0;text-align:left">${
+        selectedExtras.map(e =>
+          `<li style="font-size:0.8rem;color:var(--text-2);padding:0.15rem 0">+ ${e.nombre} × ${extrasQty[e.id]}</li>`
+        ).join("")
+      }</ul>`
+    : "";
+
   const overlay = document.createElement("div");
   overlay.className = "added-overlay";
   overlay.innerHTML = `
@@ -307,11 +316,12 @@ function showConfirmation() {
       <div class="added-check">✓</div>
       <p class="added-title">¡Agregado al pedido!</p>
       <p class="added-subtitle">${product.nombre} × ${qty}</p>
+      ${extrasHtml}
       <div class="added-actions">
-        <button class="added-secondary-btn" onclick="this.closest('.added-overlay').remove()">
+        <button class="added-secondary-btn" onclick="window.location.href='tienda-whatsapp-sheets.html'">
           Seguir eligiendo
         </button>
-        <button class="added-primary-btn" onclick="goBack()">
+        <button class="added-primary-btn" onclick="window.location.href='tienda-whatsapp-sheets.html#cart'">
           Ver carrito →
         </button>
       </div>

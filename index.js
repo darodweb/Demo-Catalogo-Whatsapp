@@ -53,6 +53,11 @@ function init() {
   });
 
   loadProducts();
+
+  if (window.location.hash === '#cart') {
+    window.history.replaceState(null, '', window.location.pathname);
+    openCart();
+  }
 }
 
 async function loadProducts() {
@@ -297,13 +302,24 @@ function renderCartModal() {
     return;
   }
 
-  const total = cart.reduce((s, i) => s + i.precio * i.qty, 0);
+  const itemTotal = (i) => {
+    const extrasSum = (i.extras || []).reduce((s, e) => s + e.precio * e.qty, 0);
+    return (i.precio + extrasSum) * i.qty;
+  };
+  const total = cart.reduce((s, i) => s + itemTotal(i), 0);
 
-  container.innerHTML = cart.map(i => `
+  container.innerHTML = cart.map(i => {
+    const extrasHtml = (i.extras && i.extras.length)
+      ? `<div style="font-size:0.78rem;color:var(--text-2);margin-top:0.2rem;line-height:1.6">${
+          i.extras.map(e => `+ ${e.nombre} × ${e.qty}`).join("<br>")
+        }</div>`
+      : "";
+    return `
     <div class="cart-item">
       <div class="cart-item-info">
-        <div class="cart-item-name">${i.emoji || ""} ${i.nombre} × ${i.qty}</div>
-        <div class="cart-item-price">${CONFIG.moneda} ${(i.precio * i.qty).toLocaleString("es-AR")}</div>
+        <div class="cart-item-name">${i.nombre} × ${i.qty}</div>
+        ${extrasHtml}
+        <div class="cart-item-price">${CONFIG.moneda} ${itemTotal(i).toLocaleString("es-AR")}</div>
       </div>
       <div class="cart-item-actions">
         <div class="qty-control">
@@ -313,9 +329,10 @@ function renderCartModal() {
         </div>
         <button class="remove-item" onclick="removeItem(${i.id})">🗑</button>
       </div>
-    </div>`).join("") +
+    </div>`;
+  }).join("") +
     `<div class="cart-total">
-       <span class="cart-total-label">Total</span>
+       <span class="cart-total-label">Subtotal</span>
        <span class="cart-total-value">${CONFIG.moneda} ${total.toLocaleString("es-AR")}</span>
      </div>`;
 
@@ -338,24 +355,32 @@ function sendToWhatsApp() {
   const address  = document.getElementById("clientAddress").value.trim();
   const payment  = document.getElementById("paymentMethod").value;
   const notes    = document.getElementById("notes").value.trim();
-  const total    = cart.reduce((s, i) => s + i.precio * i.qty, 0);
 
-  const dLabels = { retiro: "Retiro en local", envio: "Envío a domicilio" };
+  const itemTotal = (i) => {
+    const extrasSum = (i.extras || []).reduce((s, e) => s + e.precio * e.qty, 0);
+    return (i.precio + extrasSum) * i.qty;
+  };
+  const total = cart.reduce((s, i) => s + itemTotal(i), 0);
+
+  const dLabels = { retiro: "Retiro en local", envio: "Envio a domicilio" };
   const pLabels = { efectivo: "Efectivo", transferencia: "Transferencia / Mercado Pago", tarjeta: "Tarjeta" };
 
-  let msg = `🛒 *NUEVO PEDIDO — ${CONFIG.nombre}*\n\n`;
-  msg += `👤 *Cliente:* ${name}\n`;
-  if (phone) msg += `📞 *Teléfono:* ${phone}\n`;
-  msg += `\n📋 *Productos:*\n`;
+  let msg = `*NUEVO PEDIDO - ${CONFIG.nombre}*\n\n`;
+  msg += `*Cliente:* ${name}\n`;
+  if (phone) msg += `*Telefono:* ${phone}\n`;
+  msg += `\n*Productos:*\n`;
   cart.forEach(i => {
-    msg += `• ${i.nombre} × ${i.qty} — ${CONFIG.moneda} ${(i.precio * i.qty).toLocaleString("es-AR")}\n`;
-    if (i.aclaraciones) msg += `  📝 ${i.aclaraciones}\n`;
+    msg += `- ${i.nombre} x ${i.qty} - ${CONFIG.moneda} ${itemTotal(i).toLocaleString("es-AR")}\n`;
+    if (i.extras && i.extras.length) {
+      i.extras.forEach(e => { msg += `  * ${e.nombre} x ${e.qty}\n`; });
+    }
+    if (i.aclaraciones) msg += `  Aclaraciones: ${i.aclaraciones}\n`;
   });
-  msg += `\n💰 *Total: ${CONFIG.moneda} ${total.toLocaleString("es-AR")}*\n`;
-  msg += `\n🚚 *Entrega:* ${dLabels[delivery]}`;
-  if (delivery === "envio" && address) msg += `\n📍 *Dirección:* ${address}`;
-  msg += `\n💳 *Pago:* ${pLabels[payment]}`;
-  if (notes) msg += `\n📝 *Notas:* ${notes}`;
+  msg += `\n*Total: ${CONFIG.moneda} ${total.toLocaleString("es-AR")}*\n`;
+  msg += `\n*Entrega:* ${dLabels[delivery]}`;
+  if (delivery === "envio" && address) msg += `\n*Direccion:* ${address}`;
+  msg += `\n*Pago:* ${pLabels[payment]}`;
+  if (notes) msg += `\n*Notas:* ${notes}`;
 
   window.open(`https://wa.me/${CONFIG.whatsappNumero}?text=${encodeURIComponent(msg)}`, "_blank");
 }
