@@ -193,15 +193,19 @@ function renderProducts() {
     const inCart = cart.find(i => i.id === p.id);
     const delay  = `animation-delay:${idx * 0.04}s`;
 
+    const sinPrecio = p.disponible && !p.precio;
+    const showOverlay = p.disponible && !!p.precio && !inCart;
+    const overlayBtn = showOverlay
+      ? `<button class="add-btn-overlay" onclick="addToCart(${p.id});event.stopPropagation()">+</button>`
+      : "";
+
     const imgBlock = p.imagen
-      ? `<div class="product-img-wrap"><img src="${p.imagen}" alt="${p.nombre}" loading="lazy"></div>`
-      : `<div class="product-emoji">${p.emoji}</div>`;
+      ? `<div class="product-img-wrap">${overlayBtn}<img src="${p.imagen}" alt="${p.nombre}" loading="lazy"></div>`
+      : `<div class="product-emoji">${overlayBtn}${p.emoji}</div>`;
 
     const stockLabel = !p.disponible
       ? `<span class="stock-label">Agotado</span>`
       : "";
-
-    const sinPrecio = p.disponible && !p.precio;
 
     const actionBlock = !p.disponible
       ? `<button class="add-btn" disabled style="background:var(--surface-3);color:var(--text-3);cursor:default">✕</button>`
@@ -213,7 +217,7 @@ function renderProducts() {
                <span class="qty-num">${inCart.qty}</span>
                <button class="qty-btn" onclick="changeQty(${p.id},1)">+</button>
              </div>`
-          : `<button class="add-btn" onclick="addToCart(${p.id})">+</button>`;
+          : "";
 
     const priceDisplay = sinPrecio
       ? ``
