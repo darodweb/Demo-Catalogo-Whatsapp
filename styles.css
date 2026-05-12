@@ -314,6 +314,8 @@ main {
   display: flex;
   align-items: center;
   gap: 4px;
+  justify-content: right;
+  margin-top:10px;
 }
 
 .refresh-btn {
