@@ -368,7 +368,8 @@ function sendToWhatsApp() {
   const dLabels = { retiro: "Retiro en local", envio: "Envio a domicilio" };
   const pLabels = { efectivo: "Efectivo", transferencia: "Transferencia / Mercado Pago", tarjeta: "Tarjeta" };
 
-  let msg = `*NUEVO PEDIDO - ${CONFIG.nombre}*\n\n`;
+  const numeroPedido = Math.floor(10000 + Math.random() * 90000);
+  let msg = `*NUEVO PEDIDO #${numeroPedido} - ${CONFIG.nombre}*\n\n`;
   msg += `*Cliente:* ${name}\n`;
   if (phone) msg += `*Telefono:* ${phone}\n`;
   msg += `\n*Productos:*\n`;
