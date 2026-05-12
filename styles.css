@@ -261,10 +261,8 @@ main {
 /* ===== CONTROLS BAR ===== */
 .controls-bar {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 10px;
+  flex-direction: column;
+  gap: 8px;
   margin-bottom: 1.3rem;
 }
 
@@ -272,9 +270,12 @@ main {
 .categories {
   display: flex;
   gap: 6px;
-  flex-wrap: wrap;
-  flex: 1;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
+.categories::-webkit-scrollbar { display: none; }
 
 .cat-btn {
   border: 1px solid var(--border-2);
@@ -286,6 +287,8 @@ main {
   font-family: var(--font-body);
   cursor: pointer;
   color: var(--text-2);
+  white-space: nowrap;
+  flex-shrink: 0;
   transition: border-color var(--t), color var(--t), background var(--t), box-shadow var(--t);
   letter-spacing: 0.02em;
 }
