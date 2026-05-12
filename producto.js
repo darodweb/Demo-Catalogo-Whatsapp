@@ -182,8 +182,7 @@ function renderPrice() {
   }
   if (!product.precio) {
     el.innerHTML = `
-      <p class="price-label">Precio</p>
-      <p class="price-consultar-text">Precio a consultar</p>`;
+      <p class="price-label">Precio</p>`;
     return;
   }
   el.innerHTML = `
