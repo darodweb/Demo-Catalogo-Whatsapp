@@ -216,7 +216,7 @@ function renderProducts() {
           : `<button class="add-btn" onclick="addToCart(${p.id})">+</button>`;
 
     const priceDisplay = sinPrecio
-      ? `<span class="product-price-consultar">Precio a consultar</span>`
+      ? ``
       : `<span class="product-price">${CONFIG.moneda} ${p.precio.toLocaleString("es-AR")}</span>`;
 
     return `
