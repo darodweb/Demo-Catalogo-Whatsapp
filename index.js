@@ -229,7 +229,6 @@ function renderProducts() {
         <div class="product-info">
           ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ""}
           <div class="product-name">${p.nombre}</div>
-          <div class="product-desc">${p.descripcion}</div>
           <div class="product-footer" onclick="event.stopPropagation()">
             <div>
               ${priceDisplay}
