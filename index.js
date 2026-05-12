@@ -2,8 +2,8 @@
 //  CONFIGURACIÓN — EDITÁ ESTOS VALORES
 // ============================================================
 const CONFIG = {
-  nombre:         "Mi Tienda Online",
-  tagline:        "Pedí fácil, recibí rápido",
+  nombre:         "Mi Negocio",
+  tagline:        "Pedí fácil, comé rico",
   heroTitle:      "¡Bienvenido a nuestra tienda!",
   heroSubtitle:   "Elegí tus productos y recibís el pedido por WhatsApp",
   moneda:         "$",

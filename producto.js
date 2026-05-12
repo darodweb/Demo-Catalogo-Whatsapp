@@ -317,10 +317,10 @@ function showConfirmation() {
       <p class="added-subtitle">${product.nombre} × ${qty}</p>
       ${extrasHtml}
       <div class="added-actions">
-        <button class="added-secondary-btn" onclick="window.location.href='tienda-whatsapp-sheets.html'">
+        <button class="added-secondary-btn" onclick="window.location.href='index.html'">
           Seguir eligiendo
         </button>
-        <button class="added-primary-btn" onclick="window.location.href='tienda-whatsapp-sheets.html#cart'">
+        <button class="added-primary-btn" onclick="window.location.href='index.html#cart'">
           Ver carrito →
         </button>
       </div>
@@ -343,7 +343,7 @@ function goBack() {
   if (document.referrer && document.referrer.includes(window.location.hostname)) {
     history.back();
   } else {
-    window.location.href = "tienda-whatsapp-sheets.html";
+    window.location.href = "index.html";
   }
 }
 
