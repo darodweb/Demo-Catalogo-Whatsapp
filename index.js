@@ -2,9 +2,9 @@
 //  CONFIGURACIÓN — EDITÁ ESTOS VALORES
 // ============================================================
 const CONFIG = {
-  nombre:         "Mi Negocio",
+  nombre:         "El Comelón",
   tagline:        "Pedí fácil, comé rico",
-  heroTitle:      "¡Bienvenido a nuestra tienda!",
+  heroTitle:      "¡Bienvenido a El Comelón!",
   heroSubtitle:   "Elegí tus productos y recibís el pedido por WhatsApp",
   moneda:         "$",
   whatsappNumero: "5493547604687",  // código país + número, sin + ni espacios
